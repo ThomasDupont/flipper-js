@@ -1,0 +1,9 @@
+{
+  "features": {
+    "feature1": false,
+    "feature2": false
+  },
+  "storage": {
+    "type": "local"
+  }
+}

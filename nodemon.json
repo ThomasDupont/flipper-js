@@ -1,0 +1,6 @@
+{
+  "ignore": [],
+  "watch": ["src", "flipper-ui", "index.ts"],
+  "exec": "npm run build",
+  "ext": "ts"
+}
