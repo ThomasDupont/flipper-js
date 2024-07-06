@@ -1,0 +1,13 @@
+{
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": ["standard-with-typescript"],
+    "parserOptions": {
+      "project": "tsconfig.json",
+      "sourceType": "module"
+    },
+    "rules" : {
+      "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "^_$" }]
+    }
+  }

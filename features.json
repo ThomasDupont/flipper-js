@@ -1,6 +1,6 @@
 {
   "features": {
-    "feature1": false,
+    "feature1": true,
     "feature2": false
   },
   "storage": {
