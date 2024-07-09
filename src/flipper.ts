@@ -8,8 +8,8 @@ export default class Flipper {
   private static config: FeatureConfig = defaultConfig
   private static persistAdapter: PersistAdapter = new AdapterFactory('local')
 
-  static init (): void {
-    Flipper.config = getFileConfig()
+  static init (configPath?: string): void {
+    Flipper.config = getFileConfig(configPath ?? null)
     this.persistAdapter = new AdapterFactory(Flipper.config.storage.type)
   }
 

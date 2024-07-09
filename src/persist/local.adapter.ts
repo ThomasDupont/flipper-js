@@ -4,7 +4,7 @@ import { type PersistAdapter } from './Adapter.interface'
 import { getFileConfig } from '../parseConfig'
 
 export class LocalAdapter implements PersistAdapter {
-  private config = getFileConfig()
+  private config = getFileConfig(null)
   async save (config: FeatureConfig): Promise<FeatureConfig> {
     fs.writeFileSync('features.json', JSON.stringify(config, null, 2))
     this.config = config
