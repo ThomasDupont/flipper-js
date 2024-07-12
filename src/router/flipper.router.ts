@@ -22,10 +22,10 @@ const checkApiKey = (req: Request, res: Response, next: () => void): void => {
   next()
 }
 
-router.use('/assets', static_(path.join(__dirname, 'dist/flipper-ui/assets')))
+router.use('/assets', static_(path.join(__dirname, '../dist/flipper-ui/assets')))
 
 router.get('/flipper-js', (_, res) => {
-  res.sendFile('index.html', { root: path.join(__dirname, 'dist/flipper-ui') })
+  res.sendFile('index.html', { root: path.join(__dirname, '../dist/flipper-ui') })
 })
 
 router.post('/flipper-js/login', checkApiKey, validate({ postSchema: loginPostArgSchema }), (req: Request, res: Response) => {
