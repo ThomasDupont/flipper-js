@@ -32,9 +32,9 @@ const checkApiKey = (req, res, next) => {
     }
     next();
 };
-router.use('/assets', (0, express_1.static)(path_1.default.join(__dirname, '../dist/flipper-ui/assets')));
+router.use('/assets', (0, express_1.static)(path_1.default.join(__dirname, '../../flipper-ui/assets')));
 router.get('/flipper-js', (_, res) => {
-    res.sendFile('index.html', { root: path_1.default.join(__dirname, '../dist/flipper-ui') });
+    res.sendFile('index.html', { root: path_1.default.join(__dirname, '../../flipper-ui') });
 });
 router.post('/flipper-js/login', checkApiKey, (0, validator_1.validate)({ postSchema: flipper_type_1.loginPostArgSchema }), (req, res) => {
     void (() => __awaiter(void 0, void 0, void 0, function* () {
