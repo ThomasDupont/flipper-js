@@ -13,8 +13,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const parseConfig_1 = require("./parseConfig");
 const AdapterFactory_1 = require("./persist/AdapterFactory");
 class Flipper {
-    static init() {
-        _a.config = (0, parseConfig_1.getFileConfig)();
+    static init(configPath) {
+        _a.config = (0, parseConfig_1.getFileConfig)(configPath !== null && configPath !== void 0 ? configPath : null);
         this.persistAdapter = new AdapterFactory_1.AdapterFactory(_a.config.storage.type);
     }
     static setPersistAdapter(adapter) {

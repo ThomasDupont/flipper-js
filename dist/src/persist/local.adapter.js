@@ -17,7 +17,7 @@ const fs_1 = __importDefault(require("fs"));
 const parseConfig_1 = require("../parseConfig");
 class LocalAdapter {
     constructor() {
-        this.config = (0, parseConfig_1.getFileConfig)();
+        this.config = (0, parseConfig_1.getFileConfig)(null);
     }
     save(config) {
         return __awaiter(this, void 0, void 0, function* () {
