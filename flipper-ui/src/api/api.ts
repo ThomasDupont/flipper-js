@@ -1,4 +1,9 @@
-import { type ListFeaturesResponse } from '../types/flipper.types'
+import { type ListFeaturesResponse, type BaseResponse, type ErrorResponse, type TokenResponse } from '../types/flipper.types'
+
+
+const isErrorResponse = (body: BaseResponse): body is ErrorResponse => {
+  return body.status === 'error'
+}
 
 export const pingAuthToken = async (token: string): Promise<boolean> => {
   const response = await fetch('/flipper-js/auth/ping', {
@@ -21,13 +26,12 @@ export const login = async (login: string, password: string): Promise<string> =>
     body: JSON.stringify({ login, password })
   })
 
-  if (!response.ok) {
-    throw new Error('Invalid credentials')
+  const body: ErrorResponse | TokenResponse = await response.json()
+  if (isErrorResponse(body)) {
+    throw new Error(body.error)
   }
 
-  const { token } = await response.json()
-
-  return token
+  return body.token
 }
 
 export const getFeatures = async (token: string): Promise<ListFeaturesResponse> => {
@@ -39,11 +43,12 @@ export const getFeatures = async (token: string): Promise<ListFeaturesResponse> 
     }
   })
 
-  if (!response.ok) {
-    throw new Error('Invalid token')
+  const body: ErrorResponse | ListFeaturesResponse = await response.json()
+  if (isErrorResponse(body)) {
+    throw new Error(body.error)
   }
 
-  return await response.json()
+  return body
 }
 
 export const changeFeatureState = (token: string) => async (feature: string, state: boolean): Promise<boolean> => {
@@ -55,8 +60,10 @@ export const changeFeatureState = (token: string) => async (feature: string, sta
     }
   })
 
-  if (!response.ok) {
-    throw new Error('Invalid token')
+  const body = await response.json()
+
+  if (isErrorResponse(body)) {
+    throw new Error(body.error)
   }
 
   return state
