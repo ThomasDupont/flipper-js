@@ -23,7 +23,27 @@ export class RedisAdapter implements PersistAdapter {
     const awaitedRedisClient = await this.redisClient
     const hashKey = this.hashKey(key)
     const status = await awaitedRedisClient.get(hashKey)
-    return status === 'true'
+    return status?.toString() === 'true'
+  }
+
+  initConfig = async (_: string, config: FeatureConfig): Promise<FeatureConfig> => {
+    const awaitedRedisClient = await this.redisClient
+    const statusInRedis = await Promise.all(Object.entries(config.features).map(async ([feature, status]) => {
+      const hashKey = this.hashKey(feature)
+      const existingStatus = await awaitedRedisClient.get(hashKey)
+      if (existingStatus === null) {
+        await awaitedRedisClient.set(hashKey, status.toString())
+
+        return { [feature]: status }
+      }
+
+      return { [feature]: existingStatus.toString() === 'true' }
+    }))
+
+    return {
+      ...config,
+      features: Object.assign({}, ...statusInRedis)
+    }
   }
 
   private readonly hashKey = (feature: string): string => `${KEY_PREFIX}${crypto.createHash('md5').update(feature).digest('hex')}`

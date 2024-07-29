@@ -18,6 +18,19 @@ const redis_1 = require("../redis");
 const KEY_PREFIX = 'flipper-js_';
 class RedisAdapter {
     constructor() {
+        this.initConfig = (_, config) => __awaiter(this, void 0, void 0, function* () {
+            const awaitedRedisClient = yield this.redisClient;
+            const statusInRedis = yield Promise.all(Object.entries(config.features).map((_a) => __awaiter(this, [_a], void 0, function* ([feature, status]) {
+                const hashKey = this.hashKey(feature);
+                const existingStatus = yield awaitedRedisClient.get(hashKey);
+                if (existingStatus === null) {
+                    yield awaitedRedisClient.set(hashKey, status.toString());
+                    return { [feature]: status };
+                }
+                return { [feature]: existingStatus === 'true' };
+            })));
+            return Object.assign(Object.assign({}, config), { features: Object.assign({}, ...statusInRedis) });
+        });
         this.hashKey = (feature) => `${KEY_PREFIX}${crypto_1.default.createHash('md5').update(feature).digest('hex')}`;
         this.redisClient = (0, redis_1.getRedisClient)();
     }

@@ -32,7 +32,7 @@ export const validate = ({
       return T.void
     }),
     T.catchAll(error => {
-      res.json({ error: error.message })
+      res.status(400).json({ error: error.message })
       return T.void
     }),
     T.runSync

@@ -26,7 +26,7 @@ program
     .description('List all features and their statuses')
     .action(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         console.log(chalk_1.default.blueBright('Feature statuses:'));
         const list = yield flipper_1.default.list();
         for (const [feature, status] of Object.entries(list)) {
@@ -45,7 +45,7 @@ program
     .action((feature) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         options_type_1.featureSchema.parse(feature);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         yield flipper_1.default.enable(feature);
         console.log(chalk_1.default.green(`${feature} enabled`));
         process.exit(0);
@@ -61,7 +61,7 @@ program
     .action((feature) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         options_type_1.featureSchema.parse(feature);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         yield flipper_1.default.disable(feature);
         console.log(chalk_1.default.red(`${feature} disabled`));
         process.exit(0);
@@ -77,7 +77,7 @@ program
     .action((feature) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         options_type_1.featureSchema.parse(feature);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         yield flipper_1.default.enable(feature);
         console.log(chalk_1.default.green(`${feature} added and enabled by default`));
         process.exit(0);

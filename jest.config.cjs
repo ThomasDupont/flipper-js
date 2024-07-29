@@ -6,5 +6,6 @@ module.exports = {
   extensionsToTreatAsEsm: ['.ts'],
   transformIgnorePatterns: [
     'node_modules/(?!@yourproject)'
-  ]
+  ],
+  modulePathIgnorePatterns: ["<rootDir>/dist/"]
 }

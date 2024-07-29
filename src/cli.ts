@@ -15,7 +15,7 @@ program
   .description('List all features and their statuses')
   .action(async () => {
     try {
-      Flipper.init()
+      await Flipper.init()
       console.log(chalk.blueBright('Feature statuses:'))
       const list = await Flipper.list()
       for (const [feature, status] of Object.entries(list)) {
@@ -34,7 +34,7 @@ program
   .action(async (feature: string) => {
     try {
       featureSchema.parse(feature)
-      Flipper.init()
+      await Flipper.init()
       await Flipper.enable(feature)
       console.log(chalk.green(`${feature} enabled`))
       process.exit(0)
@@ -50,7 +50,7 @@ program
   .action(async (feature: string) => {
     try {
       featureSchema.parse(feature)
-      Flipper.init()
+      await Flipper.init()
       await Flipper.disable(feature)
       console.log(chalk.red(`${feature} disabled`))
       process.exit(0)
@@ -66,7 +66,7 @@ program
   .action(async (feature: string) => {
     try {
       featureSchema.parse(feature)
-      Flipper.init()
+      await Flipper.init()
       await Flipper.enable(feature)
       console.log(chalk.green(`${feature} added and enabled by default`))
       process.exit(0)

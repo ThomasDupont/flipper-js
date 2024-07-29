@@ -1,6 +1,5 @@
 import { validate } from './validator'
 import httpMocks from 'node-mocks-http'
-import { ZodError } from 'zod'
 import { loginPostArgSchema } from '../@types/flipper.type'
 
 describe('Test validator middleware', () => {
@@ -26,7 +25,7 @@ describe('Test validator middleware', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('Should call next function with Parsing error', () => {
+  it('Should send error response with Parsing error', () => {
     const request = httpMocks.createRequest({
       body: {
         login: 'test'
@@ -40,7 +39,8 @@ describe('Test validator middleware', () => {
       postSchema: loginPostArgSchema
     })(request, response, next)
 
-    expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeInstanceOf(ZodError)
+    const error = JSON.parse(response._getJSONData().error as string)
+    expect(error[0].code).toBe('invalid_type')
+    expect(error[0].path[0]).toBe('password')
   })
 })

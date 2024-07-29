@@ -17,6 +17,7 @@ class AdapterFactory {
         this.getAdapter = () => this.adapter;
         this.save = (config) => __awaiter(this, void 0, void 0, function* () { return yield this.adapter.save(config); });
         this.get = (key) => __awaiter(this, void 0, void 0, function* () { return yield this.adapter.get(key); });
+        this.initConfig = (path, config) => __awaiter(this, void 0, void 0, function* () { return yield this.adapter.initConfig(path, config); });
         switch (storageType) {
             case 'local':
                 this.adapter = new local_adapter_1.LocalAdapter();

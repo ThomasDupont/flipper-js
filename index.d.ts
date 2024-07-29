@@ -4,7 +4,7 @@ export = Flipper
 
 declare namespace Flipper {
     export class Flipper {
-        static init (path?: string): void
+        static init (path?: string): Promise<void>
         static list (): Promise<Record<string, boolean>>
         static isEnabled (feature: string): Promise<boolean>
         static enable (feature: string): Promise<void>

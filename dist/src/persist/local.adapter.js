@@ -17,11 +17,17 @@ const fs_1 = __importDefault(require("fs"));
 const parseConfig_1 = require("../parseConfig");
 class LocalAdapter {
     constructor() {
-        this.config = (0, parseConfig_1.getFileConfig)(null);
+        this.config = parseConfig_1.defaultConfig;
+        this.path = 'features.json';
+        this.initConfig = (path, config) => __awaiter(this, void 0, void 0, function* () {
+            this.path = path;
+            this.config = config;
+            return yield Promise.resolve(config);
+        });
     }
     save(config) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs_1.default.writeFileSync('features.json', JSON.stringify(config, null, 2));
+            fs_1.default.writeFileSync(this.path, JSON.stringify(config, null, 2));
             this.config = config;
             return yield Promise.resolve(config);
         });

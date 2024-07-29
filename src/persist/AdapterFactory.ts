@@ -18,9 +18,11 @@ export class AdapterFactory implements PersistAdapter {
     }
   }
 
-  getAdapter = (): PersistAdapter => this.adapter
+  public getAdapter = (): PersistAdapter => this.adapter
 
-  save = async (config: FeatureConfig): Promise<FeatureConfig> => await this.adapter.save(config)
+  public save = async (config: FeatureConfig): Promise<FeatureConfig> => await this.adapter.save(config)
 
-  get = async (key: string): Promise<boolean> => await this.adapter.get(key)
+  public get = async (key: string): Promise<boolean> => await this.adapter.get(key)
+
+  public initConfig = async (path: string, config: FeatureConfig): Promise<FeatureConfig> => await this.adapter.initConfig(path, config)
 }

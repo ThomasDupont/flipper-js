@@ -1,12 +1,10 @@
-import jwt, { JsonWebTokenError } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { auth } from './auth'
 import httpMocks from 'node-mocks-http'
-import { ZodError } from 'zod'
 
 const secret = 'secret'
 
 describe('Test auth middleware', () => {
-  const response = httpMocks.createResponse()
   it('Should hydrate request with parsed token', () => {
     const request = httpMocks.createRequest({
       headers: {
@@ -14,6 +12,7 @@ describe('Test auth middleware', () => {
       }
     })
 
+    const response = httpMocks.createResponse()
     const next = jest.fn()
 
     auth(secret)(request, response, next)
@@ -22,46 +21,46 @@ describe('Test auth middleware', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('Should call next function with a JsonWebTokenError (invalid signature)', () => {
+  it('Should call send response with a JsonWebTokenError (invalid signature)', () => {
     const request = httpMocks.createRequest({
       headers: {
         authorization: `Bearer ${jwt.sign({ login: 'test' }, 'wrong')}`
       }
     })
+    const response = httpMocks.createResponse()
 
     const next = jest.fn()
     auth(secret)(request, response, next)
 
-    expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeInstanceOf(JsonWebTokenError)
-    expect(next.mock.calls[0][0].message).toBe('invalid signature')
+    expect(response._getJSONData().error).toBe('invalid signature')
   })
 
-  it('Should call next function with an error (Wrong token provided)', () => {
+  it('Should call send response with an error (Wrong token provided)', () => {
     const request = httpMocks.createRequest({
       headers: {
         authorization: 'something'
       }
     })
+    const response = httpMocks.createResponse()
     const next = jest.fn()
     auth(secret)(request, response, next)
-    expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeInstanceOf(Error)
-    expect(next.mock.calls[0][0].message).toBe('Wrong token provided')
+
+    expect(response._getJSONData().error).toBe('Wrong token provided')
   })
 
-  it('Should call next function with an error (ZodError)', () => {
+  it('Should call send response with an error (ZodError)', () => {
     const request = httpMocks.createRequest({
       headers: {
         authorization: `Bearer ${jwt.sign({ foo: 'bar' }, secret)}`
       }
     })
+    const response = httpMocks.createResponse()
 
     const next = jest.fn()
 
     auth(secret)(request, response, next)
 
-    expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeInstanceOf(ZodError)
+    const error = JSON.parse(response._getJSONData().error as string)
+    expect(error[0].code).toBe('invalid_type')
   })
 })

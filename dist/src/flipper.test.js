@@ -37,21 +37,21 @@ describe('Flipper class tests', () => {
         getFileConfigMock.mockClear();
         getRedisClientMock.mockClear();
     });
-    it('should initialize with local adapter', () => {
+    it('should initialize with local adapter', () => __awaiter(void 0, void 0, void 0, function* () {
         getFileConfigMock.mockReturnValue({ features: { feature1: false, feature2: true }, storage: { type: options_type_1.Adapter.Local } });
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         expect(flipper_1.default.getConfig().storage.type).toBe('local');
-    });
-    it('should initialize with redis adapter', () => {
+    }));
+    it('should initialize with redis adapter', () => __awaiter(void 0, void 0, void 0, function* () {
         getFileConfigMock.mockReturnValue({ features: { feature1: false, feature2: true }, storage: { type: options_type_1.Adapter.Redis } });
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         expect(flipper_1.default.getConfig().storage.type).toBe('redis');
-    });
+    }));
     it('should list all features and their statuses (storage local)', () => __awaiter(void 0, void 0, void 0, function* () {
         getFileConfigMock.mockReturnValue({ features: { feature1: false, feature2: true }, storage: { type: options_type_1.Adapter.Local } });
         getMock.mockResolvedValueOnce(false);
         getMock.mockResolvedValueOnce(true);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         flipper_1.default.setPersistAdapter(LocalAdapter);
         const list = yield flipper_1.default.list();
         expect(list).toEqual({ feature1: false, feature2: true });
@@ -61,7 +61,7 @@ describe('Flipper class tests', () => {
         getFileConfigMock.mockReturnValue(baseConfig);
         getMock.mockResolvedValueOnce(false);
         getMock.mockResolvedValueOnce(true);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         flipper_1.default.setPersistAdapter(RedisAdapter);
         const list = yield flipper_1.default.list();
         expect(list).toEqual({ feature1: false, feature2: true });
@@ -71,7 +71,7 @@ describe('Flipper class tests', () => {
         getFileConfigMock.mockReturnValue({ features: { feature1: false, feature2: true }, storage: { type: options_type_1.Adapter.Local } });
         saveMock.mockReturnValue({ features: { feature1: true, feature2: true }, storage: { type: options_type_1.Adapter.Local } });
         getMock.mockResolvedValue(true);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         flipper_1.default.setPersistAdapter(LocalAdapter);
         yield flipper_1.default.enable('feature1');
         const list = yield flipper_1.default.list();
@@ -81,7 +81,7 @@ describe('Flipper class tests', () => {
         getFileConfigMock.mockReturnValue({ features: { feature1: false, feature2: true }, storage: { type: options_type_1.Adapter.Local } });
         saveMock.mockReturnValue({ features: { feature1: false, feature2: false }, storage: { type: options_type_1.Adapter.Local } });
         getMock.mockResolvedValue(false);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         flipper_1.default.setPersistAdapter(LocalAdapter);
         yield flipper_1.default.disable('feature2');
         const list = yield flipper_1.default.list();
@@ -90,7 +90,7 @@ describe('Flipper class tests', () => {
     it('should enable a feature (redis storage)', () => __awaiter(void 0, void 0, void 0, function* () {
         getFileConfigMock.mockReturnValue({ features: { feature1: false, feature2: true }, storage: { type: options_type_1.Adapter.Redis } });
         getMock.mockResolvedValue(true);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         flipper_1.default.setPersistAdapter(RedisAdapter);
         yield flipper_1.default.enable('feature1');
         const list = yield flipper_1.default.list();
@@ -99,7 +99,7 @@ describe('Flipper class tests', () => {
     it('should disable a feature  (redis storage)', () => __awaiter(void 0, void 0, void 0, function* () {
         getFileConfigMock.mockReturnValue({ features: { feature1: false, feature2: true }, storage: { type: options_type_1.Adapter.Redis } });
         getMock.mockResolvedValue(false);
-        flipper_1.default.init();
+        yield flipper_1.default.init();
         flipper_1.default.setPersistAdapter(RedisAdapter);
         yield flipper_1.default.disable('feature2');
         const list = yield flipper_1.default.list();

@@ -8,28 +8,30 @@ export default class Flipper {
   private static config: FeatureConfig = defaultConfig
   private static persistAdapter: PersistAdapter = new AdapterFactory('local')
 
-  static init (configPath?: string): void {
-    Flipper.config = getFileConfig(configPath ?? null)
-    this.persistAdapter = new AdapterFactory(Flipper.config.storage.type)
+  static init = async (configPath?: string): Promise<void> => {
+    const config = getFileConfig(configPath ?? null)
+    this.persistAdapter = new AdapterFactory(config.storage.type)
+    Flipper.config = await this.persistAdapter.initConfig(configPath ?? 'features.json', config)
   }
 
   static getConfig = (): FeatureConfig => Flipper.config
 
-  static setPersistAdapter (adapter: PersistAdapter): void {
+  static setPersistAdapter = (adapter: PersistAdapter): void => {
     Flipper.persistAdapter = adapter
   }
 
   static list = async (): Promise<Record<string, boolean>> => {
-    const featureObject = await Promise.all(Object.keys(Flipper.config.features).map(async (feature) =>
-      [feature, await Flipper.isEnabled(feature)]
-    ))
+    const featureObject = await Promise.all(Object.keys(Flipper.config.features).map(async (feature) => {
+      const enabled = await Flipper.isEnabled(feature)
+      return [feature, enabled]
+    }))
 
     return Object.fromEntries(featureObject)
   }
 
   static isEnabled = async (feature: string): Promise<boolean> => await Flipper.persistAdapter.get(feature)
 
-  static async enable (feature: string): Promise<void> {
+  static enable = async (feature: string): Promise<void> => {
     Flipper.config = await Flipper.persistAdapter.save({
       ...Flipper.config,
       features: {
@@ -39,7 +41,7 @@ export default class Flipper {
     })
   }
 
-  static async disable (feature: string): Promise<void> {
+  static disable = async (feature: string): Promise<void> => {
     Flipper.config = await Flipper.persistAdapter.save({
       ...Flipper.config,
       features: {
