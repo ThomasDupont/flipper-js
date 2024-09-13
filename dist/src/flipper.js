@@ -19,7 +19,7 @@ Flipper.config = parseConfig_1.defaultConfig;
 Flipper.persistAdapter = new AdapterFactory_1.AdapterFactory('local');
 Flipper.init = (configPath) => __awaiter(void 0, void 0, void 0, function* () {
     const config = (0, parseConfig_1.getFileConfig)(configPath !== null && configPath !== void 0 ? configPath : null);
-    _a.persistAdapter = new AdapterFactory_1.AdapterFactory(_a.config.storage.type);
+    _a.persistAdapter = new AdapterFactory_1.AdapterFactory(config.storage.type);
     _a.config = yield _a.persistAdapter.initConfig(configPath !== null && configPath !== void 0 ? configPath : 'features.json', config);
 });
 Flipper.getConfig = () => _a.config;
@@ -27,7 +27,10 @@ Flipper.setPersistAdapter = (adapter) => {
     _a.persistAdapter = adapter;
 };
 Flipper.list = () => __awaiter(void 0, void 0, void 0, function* () {
-    const featureObject = yield Promise.all(Object.keys(_a.config.features).map((feature) => __awaiter(void 0, void 0, void 0, function* () { return [feature, yield _a.isEnabled(feature)]; })));
+    const featureObject = yield Promise.all(Object.keys(_a.config.features).map((feature) => __awaiter(void 0, void 0, void 0, function* () {
+        const enabled = yield _a.isEnabled(feature);
+        return [feature, enabled];
+    })));
     return Object.fromEntries(featureObject);
 });
 Flipper.isEnabled = (feature) => __awaiter(void 0, void 0, void 0, function* () { return yield _a.persistAdapter.get(feature); });

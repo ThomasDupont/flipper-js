@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const validator_1 = require("./validator");
 const node_mocks_http_1 = __importDefault(require("node-mocks-http"));
-const zod_1 = require("zod");
 const flipper_type_1 = require("../@types/flipper.type");
 describe('Test validator middleware', () => {
     it('Should call next function and hydrate parsedBody object', () => {
@@ -26,7 +25,7 @@ describe('Test validator middleware', () => {
         });
         expect(next).toHaveBeenCalled();
     });
-    it('Should call next function with Parsing error', () => {
+    it('Should send error response with Parsing error', () => {
         const request = node_mocks_http_1.default.createRequest({
             body: {
                 login: 'test'
@@ -37,7 +36,8 @@ describe('Test validator middleware', () => {
         (0, validator_1.validate)({
             postSchema: flipper_type_1.loginPostArgSchema
         })(request, response, next);
-        expect(next).toHaveBeenCalled();
-        expect(next.mock.calls[0][0]).toBeInstanceOf(zod_1.ZodError);
+        const error = JSON.parse(response._getJSONData().error);
+        expect(error[0].code).toBe('invalid_type');
+        expect(error[0].path[0]).toBe('password');
     });
 });

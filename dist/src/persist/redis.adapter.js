@@ -27,7 +27,7 @@ class RedisAdapter {
                     yield awaitedRedisClient.set(hashKey, status.toString());
                     return { [feature]: status };
                 }
-                return { [feature]: existingStatus === 'true' };
+                return { [feature]: existingStatus.toString() === 'true' };
             })));
             return Object.assign(Object.assign({}, config), { features: Object.assign({}, ...statusInRedis) });
         });
@@ -46,7 +46,7 @@ class RedisAdapter {
             const awaitedRedisClient = yield this.redisClient;
             const hashKey = this.hashKey(key);
             const status = yield awaitedRedisClient.get(hashKey);
-            return status === 'true';
+            return (status === null || status === void 0 ? void 0 : status.toString()) === 'true';
         });
     }
 }

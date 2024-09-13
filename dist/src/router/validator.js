@@ -17,7 +17,7 @@ const validate = ({ getSchema, postSchema }) => (req, res, next) => {
         next();
         return effect_1.Effect.void;
     }), effect_1.Effect.catchAll(error => {
-        res.json({ error: error.message });
+        res.status(400).json({ error: error.message });
         return effect_1.Effect.void;
     }), effect_1.Effect.runSync);
 };
